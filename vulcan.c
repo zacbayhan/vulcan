@@ -17,7 +17,7 @@
 
 // defaults
 char *hostname = "127.0.0.1";
-int port = 6390;
+int port = 6379;
 
 void usage() {
     printf("usage: ./vulcan [number of keys] [string|list|set|zset] -h [host] -p [port] \n");
@@ -87,6 +87,8 @@ int main(int argc, char **argv) {
 
     char *type = argv[2];
 
+
+    // Checking command line inputs
     if (argc > 3) {
         if (strncmp(argv[3], "-h", 2) == 0) {
             if (argv[4] != NULL) {
@@ -129,7 +131,7 @@ int main(int argc, char **argv) {
     } else if (strncmp(type, "zset", 4) == 0) {
         data_type = ZSET;
         strcpy(command, "ZADD");
-    } else { 
+    } else {
         usage(); // invalid datatype
     }
 
