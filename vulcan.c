@@ -1,19 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#include <time.h>
-#include <limits.h>
-#include <pthread.h>
-#include "hiredis/hiredis.h"
-
-#define NUM_THREADS 40
-#define COMMAND_LEN 10
-
-#define STRING 1
-#define LIST 2
-#define SET 3
-#define ZSET 4
+#include "vulcan.h"
 
 // defaults
 char *hostname = "127.0.0.1";
@@ -23,13 +8,6 @@ void usage() {
     printf("usage: ./vulcan [number of keys] [string|list|set|zset] -h [host] -p [port] \n");
     exit(1);
 }
-
-struct vulcan_params {
-    int unique_id;
-    long count;
-    int type;
-    char command[COMMAND_LEN];
-} typedef vulcan_params_t;
 
 void generate_data(void *vulcan_params_pt) {
     vulcan_params_t *vulcan_params = (vulcan_params_t*) vulcan_params_pt;
@@ -63,9 +41,9 @@ void generate_data(void *vulcan_params_pt) {
 
         // set the key with a test value, special case for ZSET
         if (type == ZSET) {
-            reply = redisCommand(context, "%s %s %s %i", command, key, "test", rand());
+            reply = redisCommand(context, "%s %s %s %i", command, key, "documents", rand());
         } else {
-            reply = redisCommand(context, "%s %s %s", command, key, "test");
+            reply = redisCommand(context, "%s %s %s", command, key, "documents");
         }
 
         freeReplyObject(reply);
