@@ -1,5 +1,10 @@
+SRC_DIR=src
+EXE=vulcan
+LIBS=-lhiredis -lpthread
+OBJS=$(wildcard $(SRC_DIR)/*.c)
+
 all:
-	gcc vulcan.c -lhiredis -lpthread -o vulcan
+	gcc $(OBJS) $(LIBS) -o $(EXE)
 
 clean:
-	rm vulcan
+	rm $(EXE)
