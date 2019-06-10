@@ -17,7 +17,7 @@
 #define LIST 2
 #define SET 3
 #define ZSET 4
-
+#define PUBLISH 5
 
 struct vulcan_params {
     int unique_id;

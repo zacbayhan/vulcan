@@ -5,7 +5,7 @@ char *hostname = "127.0.0.1";
 int port = 6379;
 
 void usage() {
-    printf("usage: ./vulcan [number of keys] [string|list|set|zset] -h [host] -p [port] \n");
+    printf("usage: ./vulcan [number of keys] [string|list|set|zset|publish] -h [host] -p [port] \n");
     exit(1);
 }
 
@@ -21,6 +21,9 @@ void generate_data(void *vulcan_params_pt) {
 
     // Get a Redis context and connection
     redisContext *context;
+    redisReply *reply;
+
+
     struct timeval timeout = { 2, 500000 }; // 2.5 seconds
     context = redisConnectWithTimeout(hostname, port, timeout);
     if (context == NULL || context->err) {
@@ -33,7 +36,6 @@ void generate_data(void *vulcan_params_pt) {
         exit(1);
     }
 
-    redisReply *reply;
     for (long i = 0; i < count; i++) {
         // build the string key, using the unique id and the iteration number
         char key[80];
@@ -109,6 +111,9 @@ int main(int argc, char **argv) {
     } else if (strncmp(type, "zset", 4) == 0) {
         data_type = ZSET;
         strcpy(command, "ZADD");
+    } else if (strncmp(type, "PUBLISH", 5) == 0) {
+        data_type = PUBLISH;
+        strcpy(command, "PUBLISH");
     } else {
         usage(); // invalid datatype
     }
